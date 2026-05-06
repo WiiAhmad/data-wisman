@@ -433,6 +433,38 @@ plt.tight_layout()
 plt.savefig(out_dir / "12_semua_pintu_2008_2025.png", dpi=300, bbox_inches="tight")
 plt.close(fig)
 
+# --- Plot 15: 3 subplots (Udara, Laut, Darat) dalam 1 figure ---
+fig, axes = plt.subplots(3, 1, figsize=(16, 14))
+
+doors = [
+    ("A. Pintu Udara", "#1f77b4"),
+    ("B. Pintu Laut", "#ff7f0e"),
+    ("C. Pintu Darat", "#2ca02c"),
+]
+
+for ax, (col, color) in zip(axes, doors):
+    ax.plot(
+        plot_data.index,
+        plot_data[col].values,
+        marker="o",
+        linewidth=2,
+        color=color,
+        label=col,
+    )
+    ax.set_title(f"Kunjungan Wisman via {col} 2008-2025", fontsize=12, weight="bold")
+    ax.set_ylabel("Jumlah Kunjungan")
+    ax.grid(True, alpha=0.3)
+    ax.legend()
+    setup_y_axis(ax, plot_data[col], step=100_000)
+    tick_idx = plot_data.index[::6]
+    ax.set_xticks(list(tick_idx))
+    ax.set_xticklabels([d.strftime("%b %Y") for d in tick_idx], rotation=45, ha="right")
+
+axes[-1].set_xlabel("Bulan")
+plt.tight_layout()
+plt.savefig(out_dir / "15_subplots_pintu_2008_2025.png", dpi=300, bbox_inches="tight")
+plt.close(fig)
+
 # --- Plot 13: Semua pintu 2023-2025 ---
 subset_2023 = plot_data.loc["2023-01-01":"2025-12-31"].dropna(how="all", axis=0)
 fig, ax = plt.subplots(figsize=(14, 7))
@@ -458,6 +490,45 @@ ax.set_xticks(list(tick_idx))
 ax.set_xticklabels([d.strftime("%b %Y") for d in tick_idx], rotation=45, ha="right")
 plt.tight_layout()
 plt.savefig(out_dir / "13_per_pintu_2023_2025.png", dpi=300, bbox_inches="tight")
+plt.close(fig)
+
+# --- Plot 14: Perbandingan tahun 2018, 2019, 2023, 2024, 2025 ---
+tahun_list = [2018, 2019, 2023, 2024, 2025]
+warna_tahun = {
+    2018: "#1f77b4",
+    2019: "#ff7f0e",
+    2023: "#2ca02c",
+    2024: "#d62728",
+    2025: "#9467bd",
+}
+
+fig, ax = plt.subplots(figsize=(14, 7))
+for year in tahun_list:
+    yearly = plot_data.loc[f"{year}-01-01" : f"{year}-12-31"].sum(axis=1, skipna=True)
+    ax.plot(
+        nama_bulan_pendek[: len(yearly)],
+        yearly.values,
+        marker="o",
+        linewidth=2,
+        label=str(year),
+        color=warna_tahun[year],
+    )
+
+ax.set_title(
+    "Perbandingan Total Kunjungan Wisman 2018, 2019, 2023, 2024, 2025",
+    fontsize=14,
+    weight="bold",
+)
+ax.set_xlabel("Bulan")
+ax.set_ylabel("Jumlah Kunjungan")
+ax.grid(True, alpha=0.3)
+ax.legend()
+ax.set_ylim(0, 2_000_000)
+ax.yaxis.set_major_locator(MultipleLocator(200_000))
+ax.yaxis.set_major_formatter(FuncFormatter(fmt_kunjungan))
+
+plt.tight_layout()
+plt.savefig(out_dir / "14_perbandingan_tahun.png", dpi=300, bbox_inches="tight")
 plt.close(fig)
 
 print(f"Plot berhasil disimpan di folder: {out_dir.resolve()}")
