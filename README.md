@@ -1,7 +1,3 @@
-py2/README.md
-```
-
-```markdown
 # Plot Wisman - Visualisasi Kunjungan Wisatawan Mancanegara
 
 ## Sumber Data
