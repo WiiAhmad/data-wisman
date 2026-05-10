@@ -531,4 +531,118 @@ plt.tight_layout()
 plt.savefig(out_dir / "14_perbandingan_tahun.png", dpi=300, bbox_inches="tight")
 plt.close(fig)
 
+# ======================
+# 10. Plot yearly aggregation (x-axis = year only) 2008-2025
+# ======================
+
+# Aggregate data by year
+yearly_total = plot_data.sum(axis=1).resample("YE").sum()
+yearly_udara = plot_data["A. Pintu Udara"].resample("YE").sum()
+yearly_laut = plot_data["B. Pintu Laut"].resample("YE").sum()
+yearly_darat = plot_data["C. Pintu Darat"].resample("YE").sum()
+yearly_all = plot_data.resample("YE").sum()
+
+years = yearly_total.index.year.tolist()
+year_labels = [str(y) for y in years]
+
+# --- Plot 16: Total per tahun ---
+fig, ax = plt.subplots(figsize=(16, 7))
+ax.plot(
+    year_labels,
+    yearly_total.values,
+    marker="o",
+    linewidth=2.5,
+    color="#d62728",
+    label="Total Wisman",
+)
+ax.set_title("Total Kunjungan Wisman per Tahun 2008-2025", fontsize=14, weight="bold")
+ax.set_xlabel("Tahun")
+ax.set_ylabel("Jumlah Kunjungan")
+ax.grid(True, alpha=0.3)
+ax.legend()
+ax.set_ylim(0, 2_000_000)
+ax.yaxis.set_major_locator(MultipleLocator(200_000))
+ax.yaxis.set_major_formatter(FuncFormatter(fmt_kunjungan))
+plt.xticks(year_labels)
+plt.tight_layout()
+plt.savefig(out_dir / "16_total_per_tahun.png", dpi=300, bbox_inches="tight")
+plt.close(fig)
+
+# --- Plot 17: Pintu Udara per tahun ---
+fig, ax = plt.subplots(figsize=(16, 7))
+ax.plot(
+    year_labels,
+    yearly_udara.values,
+    marker="o",
+    linewidth=2.5,
+    color="#1f77b4",
+    label="A. Pintu Udara",
+)
+ax.set_title(
+    "Kunjungan Wisman via Pintu Udara per Tahun 2008-2025", fontsize=14, weight="bold"
+)
+ax.set_xlabel("Tahun")
+ax.set_ylabel("Jumlah Kunjungan")
+ax.grid(True, alpha=0.3)
+ax.legend()
+ax.set_ylim(0, 2_000_000)
+ax.yaxis.set_major_locator(MultipleLocator(200_000))
+ax.yaxis.set_major_formatter(FuncFormatter(fmt_kunjungan))
+plt.xticks(year_labels)
+plt.tight_layout()
+plt.savefig(out_dir / "17_pintu_udara_per_tahun.png", dpi=300, bbox_inches="tight")
+plt.close(fig)
+
+# --- Plot 18: Pintu Laut per tahun ---
+fig, ax = plt.subplots(figsize=(16, 7))
+ax.plot(
+    year_labels,
+    yearly_laut.values,
+    marker="o",
+    linewidth=2.5,
+    color="#ff7f0e",
+    label="B. Pintu Laut",
+)
+ax.set_title(
+    "Kunjungan Wisman via Pintu Laut per Tahun 2008-2025", fontsize=14, weight="bold"
+)
+ax.set_xlabel("Tahun")
+ax.set_ylabel("Jumlah Kunjungan")
+ax.grid(True, alpha=0.3)
+ax.legend()
+ax.set_ylim(0, 2_000_000)
+ax.yaxis.set_major_locator(MultipleLocator(200_000))
+ax.yaxis.set_major_formatter(FuncFormatter(fmt_kunjungan))
+plt.xticks(year_labels)
+plt.tight_layout()
+plt.savefig(out_dir / "18_pintu_laut_per_tahun.png", dpi=300, bbox_inches="tight")
+plt.close(fig)
+
+# --- Plot 19: Semua pintu per tahun ---
+fig, ax = plt.subplots(figsize=(16, 7))
+for col, color in zip(plot_data.columns, ["#1f77b4", "#ff7f0e", "#2ca02c"]):
+    yearly_col = plot_data[col].resample("YE").sum()
+    ax.plot(
+        year_labels,
+        yearly_col.values,
+        marker="o",
+        linewidth=2.5,
+        label=col,
+        color=color,
+    )
+ax.set_title(
+    "Kunjungan Wisman per Pintu Masuk per Tahun 2008-2025", fontsize=14, weight="bold"
+)
+ax.set_xlabel("Tahun")
+ax.set_ylabel("Jumlah Kunjungan")
+ax.grid(True, alpha=0.3)
+ax.legend()
+ax.set_ylim(0, 2_000_000)
+ax.yaxis.set_major_locator(MultipleLocator(200_000))
+ax.yaxis.set_major_formatter(FuncFormatter(fmt_kunjungan))
+plt.xticks(year_labels)
+plt.tight_layout()
+plt.savefig(out_dir / "19_semua_pintu_per_tahun.png", dpi=300, bbox_inches="tight")
+plt.close(fig)
+
 print(f"Plot berhasil disimpan di folder: {out_dir.resolve()}")
