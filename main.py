@@ -434,7 +434,7 @@ plt.savefig(out_dir / "12_semua_pintu_2008_2025.png", dpi=300, bbox_inches="tigh
 plt.close(fig)
 
 # --- Plot 15: 3 subplots (Udara, Laut, Darat) dalam 1 figure ---
-fig, axes = plt.subplots(3, 1, figsize=(16, 14))
+fig, axes = plt.subplots(3, 1, figsize=(16, 16))
 
 doors = [
     ("A. Pintu Udara", "#1f77b4"),
@@ -456,13 +456,16 @@ for ax, (col, color) in zip(axes, doors):
     ax.grid(True, alpha=0.3)
     ax.legend()
     setup_y_axis(ax, plot_data[col], step=100_000)
+    # Add padding at top and bottom of each subplot
+    ylim = ax.get_ylim()
+    ax.set_ylim(ylim[0], ylim[1] * 1.15)
     tick_idx = plot_data.index[::6]
     ax.set_xticks(list(tick_idx))
     ax.set_xticklabels([d.strftime("%b %Y") for d in tick_idx], rotation=45, ha="right")
 
 axes[-1].set_xlabel("Bulan")
-plt.tight_layout()
-plt.savefig(out_dir / "15_subplots_pintu_2008_2025.png", dpi=300, bbox_inches="tight")
+plt.subplots_adjust(hspace=0.35, top=0.95, bottom=0.08)
+plt.savefig(out_dir / "15_subplots_pintu_2008_2025.png", dpi=600, bbox_inches="tight")
 plt.close(fig)
 
 # --- Plot 13: Semua pintu 2023-2025 ---
